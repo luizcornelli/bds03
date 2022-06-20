@@ -23,7 +23,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	private JwtTokenStore jwtTokenStore; 
 	
 	private static final String[] PUBLIC = {"/oauth/token", "/h2-console/**"};
-	private static final String[] OPERADOR_OR_ADMIN = {"/products/**", "/categories/**"};
+	private static final String[] OPERADOR_GET = {"/departments/**", "/employees/**"};
 	private static final String[] ADMIN = {"/users/**"};
 
 	@Override // verificar se o token é válido
@@ -42,14 +42,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		
 		http.authorizeRequests()
 		.antMatchers(PUBLIC).permitAll()
-		.antMatchers(HttpMethod.GET, OPERADOR_OR_ADMIN).permitAll() // liberando apenas o 
-														// get para todo mundo no vetor de operador e admin
-		.antMatchers(OPERADOR_OR_ADMIN).hasAnyRole("OPERATOR", "ADMIN")
-		.antMatchers(ADMIN).hasAnyRole("ADMIN")
-		.anyRequest().authenticated();
-		
-		
+		.antMatchers(HttpMethod.GET, OPERADOR_GET).hasAnyRole("OPERATOR", "ADMIN")
+		.anyRequest().hasAnyRole("ADMIN"); 
 	}
-
 	
 }
